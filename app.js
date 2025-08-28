@@ -1022,3 +1022,49 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('Features: Product Catalog, Shopping Cart, User Auth, Admin Dashboard');
   console.log('Built with: Vanilla JavaScript ES6+, CSS Grid/Flexbox, Semantic HTML5');
 });
+
+async function fetchRecommendations(userId) {
+  // Placeholder: call to AI recommendation backend
+  const response = await fetch(`/api/recommendations?userId=${userId}`);
+  if (!response.ok) throw new Error("Failed to fetch recommendations");
+  return await response.json();
+}
+
+async function renderRecommendations(userId) {
+  try {
+    const recommended = await fetchRecommendations(userId);
+    const container = document.getElementById("recommendedProducts");
+    container.innerHTML = recommended.map(p => ProductManager.renderProductCard(p)).join('');
+  } catch (error) {
+    console.error("Recommendation error:", error);
+  }
+}
+
+
+if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new Recognition();
+  recognition.lang = 'en-US';
+  recognition.continuous = false;
+
+  document.getElementById('voiceSearchBtn').addEventListener('click', () => recognition.start());
+
+  recognition.onresult = event => {
+    appState.searchQuery = event.results[0][0].transcript;
+    // Optionally update search input UI if exists
+    document.querySelector('.nav__search-input').value = appState.searchQuery;
+    ProductManager.filterAndRenderProducts(); // Assuming this exists to render filtered
+  };
+
+  recognition.onerror = event => console.error('Voice recognition error:', event.error);
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').then(registration => {
+      console.log('Service Worker registered with scope:', registration.scope);
+    }).catch(error => {
+      console.error('Service Worker registration failed:', error);
+    });
+  });
+}

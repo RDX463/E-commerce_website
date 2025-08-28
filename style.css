@@ -1592,3 +1592,8 @@ select.form-control {
     width: 95%;
   }
 }
+
+.btn:focus-visible,
+.form-control:focus-visible {
+  outline: var(--focus-outline);
+}
