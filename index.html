@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore - Modern E-commerce Platform</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="nav__brand">
+                <h1 class="nav__logo">TechStore</h1>
+            </div>
+            <div class="nav__search">
+                <input type="text" id="searchInput" class="form-control nav__search-input" placeholder="Search products...">
+                <button class="btn btn--primary nav__search-btn" onclick="handleSearch()">Search</button>
+            </div>
+            <div class="nav__actions">
+                <button class="btn btn--outline nav__cart-btn" onclick="showCart()">
+                    Cart (<span id="cartCount">0</span>)
+                </button>
+                <button class="btn btn--secondary nav__account-btn" id="accountBtn" onclick="toggleAccount()">
+                    Account
+                </button>
+                <button class="btn btn--outline nav__admin-btn hidden" id="adminBtn" onclick="showAdmin()">
+                    Admin
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Homepage View -->
+        <section id="homepage" class="view view--active">
+            <!-- Hero Section -->
+            <div class="hero">
+                <div class="container">
+                    <div class="hero__content">
+                        <h1 class="hero__title">Premium Tech & Lifestyle Products</h1>
+                        <p class="hero__description">Discover the latest in technology, fashion, books, and home essentials.</p>
+                        <button class="btn btn--primary btn--lg hero__cta" onclick="showProducts()">Shop Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories Section -->
+            <section class="categories">
+                <div class="container">
+                    <h2 class="section__title">Shop by Category</h2>
+                    <div class="categories__grid" id="categoriesGrid">
+                        <!-- Categories will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Products -->
+            <section class="featured">
+                <div class="container">
+                    <h2 class="section__title">Featured Products</h2>
+                    <div class="products__grid" id="featuredProducts">
+                        <!-- Featured products will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Products Listing View -->
+        <section id="products" class="view">
+            <div class="container">
+                <div class="products__header">
+                    <h2 class="section__title">All Products</h2>
+                    <div class="products__filters">
+                        <select id="categoryFilter" class="form-control">
+                            <option value="">All Categories</option>
+                        </select>
+                        <select id="sortFilter" class="form-control">
+                            <option value="name">Sort by Name</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="rating">Rating</option>
+                        </select>
+                        <input type="range" id="priceRange" class="price-range" min="0" max="500" value="500">
+                        <span class="price-range-label">Max: $<span id="priceRangeValue">500</span></span>
+                    </div>
+                </div>
+                <div class="products__grid" id="productsGrid">
+                    <!-- Products will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Detail View -->
+        <section id="productDetail" class="view">
+            <div class="container">
+                <button class="btn btn--outline back-btn" onclick="showProducts()">← Back to Products</button>
+                <div class="product-detail" id="productDetailContent">
+                    <!-- Product detail will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Shopping Cart View -->
+        <section id="cart" class="view">
+            <div class="container">
+                <h2 class="section__title">Shopping Cart</h2>
+                <div class="cart__content" id="cartContent">
+                    <!-- Cart items will be populated by JavaScript -->
+                </div>
+                <div class="cart__footer">
+                    <div class="cart__total">
+                        <h3>Total: $<span id="cartTotal">0.00</span></h3>
+                    </div>
+                    <div class="cart__actions">
+                        <button class="btn btn--outline" onclick="showProducts()">Continue Shopping</button>
+                        <button class="btn btn--primary" onclick="showCheckout()" id="checkoutBtn">Proceed to Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout View -->
+        <section id="checkout" class="view">
+            <div class="container">
+                <h2 class="section__title">Checkout</h2>
+                <form class="checkout__form" id="checkoutForm">
+                    <div class="checkout__sections">
+                        <div class="checkout__billing">
+                            <h3>Billing Information</h3>
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullName" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Address</label>
+                                <input type="text" class="form-control" id="address" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">City</label>
+                                <input type="text" class="form-control" id="city" required>
+                            </div>
+                        </div>
+                        <div class="checkout__payment">
+                            <h3>Payment Information</h3>
+                            <div class="form-group">
+                                <label class="form-label">Card Number</label>
+                                <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" placeholder="123" required>
+                            </div>
+                        </div>
+                        <div class="checkout__summary">
+                            <h3>Order Summary</h3>
+                            <div id="checkoutSummary">
+                                <!-- Order summary will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkout__actions">
+                        <button type="button" class="btn btn--outline" onclick="showCart()">Back to Cart</button>
+                        <button type="submit" class="btn btn--primary">Place Order</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Account View -->
+        <section id="account" class="view">
+            <div class="container">
+                <div class="account__tabs">
+                    <button class="btn btn--outline tab-btn active" onclick="showAccountTab('login')">Login</button>
+                    <button class="btn btn--outline tab-btn" onclick="showAccountTab('register')">Register</button>
+                    <button class="btn btn--outline tab-btn hidden" id="ordersTab" onclick="showAccountTab('orders')">Order History</button>
+                </div>
+
+                <!-- Login Form -->
+                <div class="account__content" id="loginTab">
+                    <h3>Login to Your Account</h3>
+                    <form class="account__form" id="loginForm">
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn--primary">Login</button>
+                        <p class="account__demo-info">
+                            Demo credentials:<br>
+                            Customer: user@example.com / user123<br>
+                            Admin: admin@store.com / admin123
+                        </p>
+                    </form>
+                </div>
+
+                <!-- Register Form -->
+                <div class="account__content hidden" id="registerTab">
+                    <h3>Create New Account</h3>
+                    <form class="account__form" id="registerForm">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="registerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="registerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn--primary">Register</button>
+                    </form>
+                </div>
+
+                <!-- Order History -->
+                <div class="account__content hidden" id="ordersTab">
+                    <h3>Your Order History</h3>
+                    <div id="orderHistory">
+                        <!-- Order history will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Logged In User Info -->
+                <div class="account__user-info hidden" id="userInfo">
+                    <h3>Welcome, <span id="userName"></span>!</h3>
+                    <button class="btn btn--outline" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard -->
+        <section id="admin" class="view">
+            <div class="container">
+                <h2 class="section__title">Admin Dashboard</h2>
+                <div class="admin__tabs">
+                    <button class="btn btn--outline tab-btn active" onclick="showAdminTab('products')">Manage Products</button>
+                    <button class="btn btn--outline tab-btn" onclick="showAdminTab('orders')">View Orders</button>
+                    <button class="btn btn--outline tab-btn" onclick="showAdminTab('analytics')">Analytics</button>
+                </div>
+
+                <!-- Product Management -->
+                <div class="admin__content" id="adminProducts">
+                    <div class="admin__actions">
+                        <button class="btn btn--primary" onclick="showAddProductForm()">Add New Product</button>
+                    </div>
+                    <div class="products__table" id="adminProductsTable">
+                        <!-- Products table will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Orders Management -->
+                <div class="admin__content hidden" id="adminOrders">
+                    <div class="orders__table" id="adminOrdersTable">
+                        <!-- Orders table will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Analytics -->
+                <div class="admin__content hidden" id="adminAnalytics">
+                    <div class="analytics__cards">
+                        <div class="card analytics__card">
+                            <div class="card__body">
+                                <h4>Total Products</h4>
+                                <p class="analytics__value" id="totalProducts">0</p>
+                            </div>
+                        </div>
+                        <div class="card analytics__card">
+                            <div class="card__body">
+                                <h4>Total Orders</h4>
+                                <p class="analytics__value" id="totalOrders">0</p>
+                            </div>
+                        </div>
+                        <div class="card analytics__card">
+                            <div class="card__body">
+                                <h4>Total Revenue</h4>
+                                <p class="analytics__value" id="totalRevenue">$0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Add Product Modal -->
+    <div class="modal hidden" id="addProductModal">
+        <div class="modal__overlay" onclick="closeModal('addProductModal')"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3>Add New Product</h3>
+                <button class="modal__close" onclick="closeModal('addProductModal')">&times;</button>
+            </div>
+            <form class="modal__form" id="addProductForm">
+                <div class="form-group">
+                    <label class="form-label">Product Name</label>
+                    <input type="text" class="form-control" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-control" id="productCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Books">Books</option>
+                        <option value="Home & Garden">Home & Garden</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price</label>
+                    <input type="number" class="form-control" id="productPrice" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="productDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Stock Quantity</label>
+                    <input type="number" class="form-control" id="productStock" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Image URL</label>
+                    <input type="url" class="form-control" id="productImage" required>
+                </div>
+                <div class="modal__actions">
+                    <button type="button" class="btn btn--outline" onclick="closeModal('addProductModal')">Cancel</button>
+                    <button type="submit" class="btn btn--primary">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal hidden" id="successModal">
+        <div class="modal__overlay" onclick="closeModal('successModal')"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3>Success!</h3>
+                <button class="modal__close" onclick="closeModal('successModal')">&times;</button>
+            </div>
+            <div class="modal__body">
+                <p id="successMessage"></p>
+            </div>
+            <div class="modal__actions">
+                <button class="btn btn--primary" onclick="closeModal('successModal')">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__section">
+                    <h4>TechStore</h4>
+                    <p>Modern e-commerce platform built with vanilla JavaScript, HTML5, and CSS3.</p>
+                </div>
+                <div class="footer__section">
+                    <h4>Features</h4>
+                    <ul class="footer__links">
+                        <li>Product Catalog</li>
+                        <li>Shopping Cart</li>
+                        <li>User Authentication</li>
+                        <li>Admin Dashboard</li>
+                        <li>Responsive Design</li>
+                    </ul>
+                </div>
+                <div class="footer__section">
+                    <h4>Technology Stack</h4>
+                    <ul class="footer__links">
+                        <li>HTML5 Semantic Markup</li>
+                        <li>CSS3 with Flexbox/Grid</li>
+                        <li>Vanilla JavaScript ES6+</li>
+                        <li>State Management</li>
+                        <li>Local Data Persistence</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer__bottom">
+                <p>&copy; 2024 TechStore. Built for portfolio demonstration.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
